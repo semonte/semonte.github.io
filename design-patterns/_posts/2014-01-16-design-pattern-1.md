@@ -5,7 +5,7 @@ title: Builder Pattern
 
 <h1>Builder Pattern</h1>
 
-<p>I use builder pattern quite a lot. Have a search query you want to build? Object that has plenty of fields with some of them mandatatory? Builder pattern is here to save you!</p>
+<p>I use builder pattern quite a lot. Have a search query you want to build? Object that has plenty of fields with some of them mandatory? Builder pattern is here to save you!</p>
   
 <p>The idea of the builder pattern is to gradually construct an object without using the object's constructor directly, but with a separate builder object. By using the builder object we can avoid having numerous constructors for an object. We also can make sure that the created object is in a consistent state. Let's see how this works by an example.</p>
 
