@@ -14,11 +14,14 @@ tags: [creational]
 
 <p>I have a user service that needs to get users either from database or cache. The service method is the following.</p>
 
-<pre>
-public User getUserByName(RepositoryType repositoryType, String name)
-</pre>
+~~~~~~~~
 
-<pre>
+public User getUserByName(RepositoryType repositoryType, String name)
+
+~~~~~~~~
+
+~~~~~~~~
+
 public class User {
 
     public String name;
@@ -27,15 +30,18 @@ public class User {
         this.name = name;
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>The <i>RepositoryType</i> is an enum, which specifies what repository should be used (database or cache).</p>
   
-<pre>
+~~~~~~~~
+
 public enum RepositoryType {
     DATABASE, CACHE
 }
-</pre>
+
+~~~~~~~~
 
 <p>How can I isolate the logic of selecting the correct repository, so that the user service does not need to bother itself with such low level details. What can we do?</p>
 
@@ -43,35 +49,42 @@ public enum RepositoryType {
 
 <p>We'll start by creating an interface for finding the user by name. We do not worry about selecting the correct repository yet.</p>
 
-<pre>
+~~~~~~~~
+
 public interface IUserRepository {
     public User getUserByName(String name);
 }
-</pre>
+
+~~~~~~~~
 
 <p>Next we provide two implementations for this interface (database and cached implementations).</p>
 
-<pre>
+~~~~~~~~
+
 public class DatabaseUserRepository implements IUserRepository {
 
     public User getUserByName(String name) {
         return new User("I am a user from database!");
     }
 }
-</pre>
 
-<pre>
+~~~~~~~~
+
+~~~~~~~~
+
 public class CacheUserRepository implements IUserRepository {
 
     public User getUserByName(String name) {
         return new User("I am a user from cache!");
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>We are almost done. Now we just need to select the correct repository based on the <i>RepositoryType</i> parameter of the user service call. Easy, let's just do the following.</p>
 
-<pre>
+~~~~~~~~
+
 public class UserService {
 
     private IUserRepositoryFactory userRepositoryFactory;
@@ -84,17 +97,21 @@ public class UserService {
         return this.userRepositoryFactory.create(repositoryType).getUserByName(name);
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>Where did that <i>IUserRepositoryFactory</i> come from and what does it do? Hmm...</p>
 
-<pre>
+~~~~~~~~
+
 public interface IUserRepositoryFactory {
     public IUserRepository create(RepositoryType repositoryType);
 }
-</pre>
 
-<pre>
+~~~~~~~~
+
+~~~~~~~~
+
 public class UserRepositoryFactory implements IUserRepositoryFactory {
 
     private IUserRepository databaseUserRepository;
@@ -117,12 +134,14 @@ public class UserRepositoryFactory implements IUserRepositoryFactory {
         throw new IllegalArgumentException("RepositoryType not supported!");
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>As you can see, <i>IUserRepositoryFactory</i> is an interface which is implemented by <i>UserRepositoryFactory</i>. The <i>UserRepositoryFactory</i> is responsible for the logic of selecting the correct repository. The user service is completely unaware of this logic and we could easily add more repositories just be modifying the <i>UserRepositoryFactory</i> class!</p>
 
 <p>Here is an example of how the service is used. <b>Note: the first four lines would actually be handled by a dependency injection framework.</b></p>
-<pre>
+~~~~~~~~
+
 IUserRepository databaseUserRepository = new DatabaseUserRepository();
 IUserRepository cacheUserRepository = new CacheUserRepository();
 IUserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(databaseUserRepository, cacheUserRepository);
@@ -133,7 +152,8 @@ User userFromCache = userService.getUserByName(RepositoryType.CACHE, "");
 
 assertEquals("I am a user from database!", userFromDatabase.name);
 assertEquals("I am a user from cache!", userFromCache.name);
-</pre>
+
+~~~~~~~~
 
 <p>I hope that <a href="http://en.wikipedia.org/wiki/Abstract_factory_pattern">Wikipedia's</a> first line about abstract factories makes even a bit more sense to you than before :)</p>
 

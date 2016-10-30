@@ -18,17 +18,18 @@ tags: [structural]
 
 <p>Decorator pattern is a real lifesaver here. It allows us to decorate an object to provide additional behavior for that object. What are we going to decorate here? A cocktail of course!</p>
 
-<pre>
+~~~~~~~~
 
 public abstract class Cocktail {
     public abstract BigDecimal getCost();
     public abstract String getDescription();
 }
-</pre>
+
+~~~~~~~~
 
 <p>Our cocktails have only two behaviors, they know their value and what they contain. Now it is time for our base implementation of the cocktail. Our basic cocktail will always contain some Vodka. This will be the base class that we'll start decorating.</p>
 
-<pre>
+~~~~~~~~
 
 public class BasicCocktail extends Cocktail {
 
@@ -40,11 +41,12 @@ public class BasicCocktail extends Cocktail {
         return "Vodka";
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>Just like with our base cocktail class, we'll also use a base decorator class. Note that this base decorator class also extends the <i>Cocktail</i> class just like the <i>BasicCocktail</i> class.</p>
 
-<pre>
+~~~~~~~~
 
 public class CocktailDecorator extends Cocktail {
 
@@ -62,11 +64,12 @@ public class CocktailDecorator extends Cocktail {
         return cocktail.getDescription();
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>Here is a sample decorator that will add White Rum to the cocktail.</p>
 
-<pre>
+~~~~~~~~
 
 public class WhiteRum extends CocktailDecorator {
 
@@ -82,11 +85,12 @@ public class WhiteRum extends CocktailDecorator {
         return cocktail.getDescription() + ", White rum";
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>All the rest of the decorators are the same, with their own cost and description.</p>
 
-<pre>
+~~~~~~~~
 
 public class TripleSec extends CocktailDecorator {
 
@@ -162,58 +166,61 @@ public class Cola extends CocktailDecorator {
         return cocktail.getDescription() + ", Cola";
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>Here is how we would build a cocktail using the decorators. Let's start by creating the basic cocktail.</p>
 
-<pre>
+~~~~~~~~
 
-        Cocktail cocktail = new BasicCocktail();
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka
-</pre>
+Cocktail cocktail = new BasicCocktail();
+System.out.println(cocktail.getDescription());
+// Prints: Vodka
+
+~~~~~~~~
 
 <p>To add white rum to the mix.</p>
 
-<pre>
+~~~~~~~~
 
-        cocktail = new WhiteRum(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum
-</pre>
+cocktail = new WhiteRum(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum
+
+~~~~~~~~
 
 <p>Let's add the rest as well!</p>
 
-<pre>
+~~~~~~~~
 
-        cocktail = new TripleSec(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum, Triple sec
-        
-        cocktail = new Tequila(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum, Triple sec, Tequila
-        
-        cocktail = new LemonJuice(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints:Vodka, White rum, Triple sec, Tequila, Lemon juice
+cocktail = new TripleSec(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum, Triple sec
 
-        cocktail = new Gin(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin
+cocktail = new Tequila(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum, Triple sec, Tequila
 
-        cocktail = new Cola(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin, Cola
-        
-        System.out.println("Cost: " + cocktail.getCost());
-        // Prints: Cost: 18
-        
-</pre>
+cocktail = new LemonJuice(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints:Vodka, White rum, Triple sec, Tequila, Lemon juice
+
+cocktail = new Gin(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin
+
+cocktail = new Cola(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin, Cola
+
+System.out.println("Cost: " + cocktail.getCost());
+// Prints: Cost: 18
+
+~~~~~~~~
 
 <p>But wait! Now our customers are complaining that the drink is <b>too warm and needs to be colder</b>. Luckily, we are well prepared for such demands. Here is a new decorator to make our drink a bit cooler.</p>
 
-<pre>
+~~~~~~~~
 
 public class Ice extends CocktailDecorator {
 
@@ -229,18 +236,20 @@ public class Ice extends CocktailDecorator {
         return cocktail.getDescription() + ", Ice";
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>We can add this decorator the same way as all the others</p>
 
-<pre>
+~~~~~~~~
 
-        cocktail = new Ice(cocktail);
-        System.out.println(cocktail.getDescription());
-        // Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin, Cola, Ice
-</pre>
+cocktail = new Ice(cocktail);
+System.out.println(cocktail.getDescription());
+// Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin, Cola, Ice
+
+~~~~~~~~
 
 <p>Here is our finished drink!</p>
 
 <div><img src="/images/posts/cocktail.jpg" title="Cocktail with Decorator Pattern"></div>
-<div><i>Image from <a href="http://en.wikipedia.org/wiki/File:Long_Island_Ice_Tea.jpg#file">Wikipedia</a></i><div>
+<div><i>Image from <a href="http://en.wikipedia.org/wiki/File:Long_Island_Ice_Tea.jpg#file">Wikipedia</a></i></div>

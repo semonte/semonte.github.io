@@ -20,15 +20,18 @@ tags: [structural]
 
 <p>Let's start by writing the interface.</p>
 
-<pre>
+~~~~~~~~
+
 public interface IFile {
     public String getContent(String path);
 }
-</pre>
+
+~~~~~~~~
 
 <p>And here we have the implementation of that interface.</p>
 
-<pre>
+~~~~~~~~
+
 public class FileImpl implements IFile {
 
 public String getContent(String path) {
@@ -36,19 +39,22 @@ public String getContent(String path) {
   return "Placeholder text...";
   }
 }
-</pre>
+
+~~~~~~~~
 
 <p>In order to use a proxy instead of using <i>FileImpl</i>, we need a way to create that proxy. Luckily, Java has a pretty awesome class in <i>java.lang.reflect</i> package called <i>Proxy</i>. By using <i>Proxy</i> class, we can actually create proxies from interfaces!</p>
 
-<pre>
+~~~~~~~~
+
 IFile o = (IFile) Proxy.newProxyInstance(IFile.class.getClassLoader(),
-                                         new Class<?>[]{IFile.class},
+                                         new Class[]{IFile.class},
                                          new FileInvocationHandler(new FileImpl()));
-</pre>
+
+~~~~~~~~
 
 <p>You are probably now wondering what is that <i>FileInvocationHandler</i>. Here is the source for that and an explantion after.</p>
 
-<pre>
+~~~~~~~~
 
 public class FileInvocationHandler implements InvocationHandler {
 
@@ -68,13 +74,14 @@ public class FileInvocationHandler implements InvocationHandler {
         return method.invoke(this.file, args);
     }
 }
-</pre>
+
+~~~~~~~~
 
 <p>When we create a proxy class with the <i>Proxy.newProxyInstance()</i> method, we must also pass an invocation handler as the third parameter. When a proxy class method is called, the call actually invokes the invocation handler's invoke method, no matter what proxy method is being called. This allows us to protect files, so that the contents of files in the "/private" folder are never accessable.</p>
 
 <p>Here are simple test cases to verify the functionality.</p>
 
-<pre>
+~~~~~~~~
 
     @Test
     public void thatPublicFolderIsAccessible() throws IllegalAccessException {
@@ -92,6 +99,7 @@ public class FileInvocationHandler implements InvocationHandler {
                                                  new FileInvocationHandler(new FileImpl()));
         o.getContent("/private/file.txt");
     }
-</pre>
+    
+~~~~~~~~
 
 <p class="warning">This code is here just to give you an idea of proxy pattern. There should probably be additional checks to fully secure file paths.</p>

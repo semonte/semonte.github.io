@@ -1,4 +1,4 @@
 name: "Posts About Code"
 description: "Feel free to use any stuff here as you seem fit!"
-markdown: redcarpet
 permalink: /:categories/:title.html
+markdown: kramdown

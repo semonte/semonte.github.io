@@ -16,7 +16,8 @@ tags: [creational]
 
 <p>The following code contains a sample of the <i>Employee</i> class. The object has private fields with setters and getters provided.</p>
 
-<pre>
+~~~~~~~~
+
 public class Employee {
 
     private String firstName;           // Required
@@ -26,21 +27,23 @@ public class Employee {
     
     // getters and setters
     
-</pre>
+~~~~~~~~
 
 <p>If we were to handle the employee object, we would first need to check that it is in a consistent state. So we would always do the following checks when handling an employee object</p>
 
-<pre>
+~~~~~~~~
+
 if(employee.getFirstName() != null) {
   ...
 }
-</pre>
+
+~~~~~~~~
 
 <h2>Solution</h2>
   
 <p>There is an easier way! Check out the new improved <i>Employee</i></p>
 
-<pre>
+~~~~~~~~
 
 public class Employee {
 
@@ -119,11 +122,11 @@ public class Employee {
     }
 }
 
-</pre>
+~~~~~~~~
 
 <p>What have we done? Well, we've used a builder object <i>EmployeeBuilder</i> that will construct an immutable <i>Employee</i> object with all mandatory fields guaranteed to be populated. The cool thing about this pattern is also the way you construct new objects.</p>
 
-<pre>
+~~~~~~~~
 
 Employee employee = new Employee.EmployeeBuilder()
         .firstName("Sebastian")
@@ -132,7 +135,7 @@ Employee employee = new Employee.EmployeeBuilder()
         .salaryPerMonth(new BigDecimal(0))
         .build();
         
-</pre>
+~~~~~~~~
 
 <p>If you miss a mandatory field, the object will not be created and you'll be greeted with an <i>IllegalStateException</i> :)</p>
 
@@ -140,11 +143,13 @@ Employee employee = new Employee.EmployeeBuilder()
 
 <p>Apache's <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/builder/ToStringBuilder.html">ToStringBuilder</a> is an example of a builder pattern. It helps to implement a <i>toString()</i> method without complex String concatenation. An example usage:</p>
 
-<pre>
+~~~~~~~~
+
 public String toString() {
     return new ToStringBuilder(this).
       append("name", name).
       append("age", age).
       build();
 }
-</pre>
+
+~~~~~~~~

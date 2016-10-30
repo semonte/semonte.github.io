@@ -97,10 +97,3 @@ pre {
   white-space : pre;
 }
 
-code {
-  font-family : Cambria, Garamond, Palatino Linotype, serif;
-  color: #6e380a;
-  background: transparent;
-  font-style : normal;
-  font-size: 100%;
-}
