@@ -2,11 +2,10 @@
 layout: default
 ---
 
-<div class="posts-listing">
-	<h2>Posts so far:</h2>
-	<ul>
-		{% for post in site.posts limit: 5 %}
-		<li>{{ post.date | date: "%-d %B %Y" }} <a href="{{ post.url }}">{{ post.title }}</a></li>
-		{% endfor %}
-	</ul>
-</div>
+<h1>Programming</h1>
+<ul class="categories">
+	<li><a href="/design-patterns" alt="Design Patterns">Design Patterns</a></li>
+</ul>
+
+<section>
+<p>Welcome to my site. This site exists to share knowledge about programming and software in general. I am a software engineer/developer/consultant/architect (you get the point) with focus on Java. Therefore, most of the posts are related to Java. However, nowadays one can not simply avoid Node.js, so don't be surprised if a JavaScript article or two comes by.</p>

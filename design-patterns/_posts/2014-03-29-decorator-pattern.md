@@ -1,11 +1,14 @@
 ---
 layout: post
 title: Decorator Pattern
+tags: [structural]
 ---
 
 <h1>Decorator Pattern</h1>
 
-<p>Decorator pattern is an awesome pattern if you need to add behavior to an object at runtime.</p>
+<p><a href="https://en.wikipedia.org/wiki/Decorator_pattern">Wikipedia</a> describes the decorator pattern as following</p>
+
+<p><i>In object-oriented programming, the decorator pattern is a design pattern that allows behavior to be added to an individual object, either statically or dynamically, without affecting the behavior of other objects from the same class.</i></p>
 
 <h2>Use Case</h2>
 
@@ -15,17 +18,17 @@ title: Decorator Pattern
 
 <p>Decorator pattern is a real lifesaver here. It allows us to decorate an object to provide additional behavior for that object. What are we going to decorate here? A cocktail of course!</p>
 
-{% highlight java %}
+<pre>
 
 public abstract class Cocktail {
     public abstract BigDecimal getCost();
     public abstract String getDescription();
 }
-{% endhighlight %}
+</pre>
 
 <p>Our cocktails have only two behaviors, they know their value and what they contain. Now it is time for our base implementation of the cocktail. Our basic cocktail will always contain some Vodka. This will be the base class that we'll start decorating.</p>
 
-{% highlight java %}
+<pre>
 
 public class BasicCocktail extends Cocktail {
 
@@ -37,11 +40,11 @@ public class BasicCocktail extends Cocktail {
         return "Vodka";
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>Just like with our base cocktail class, we'll also use a base decorator class. Note that this base decorator class also extends the Cocktail class just like the BasicCocktail class.</p>
+<p>Just like with our base cocktail class, we'll also use a base decorator class. Note that this base decorator class also extends the <i>Cocktail</i> class just like the <i>BasicCocktail</i> class.</p>
 
-{% highlight java %}
+<pre>
 
 public class CocktailDecorator extends Cocktail {
 
@@ -59,11 +62,11 @@ public class CocktailDecorator extends Cocktail {
         return cocktail.getDescription();
     }
 }
-{% endhighlight %}
+</pre>
 
 <p>Here is a sample decorator that will add White Rum to the cocktail.</p>
 
-{% highlight java %}
+<pre>
 
 public class WhiteRum extends CocktailDecorator {
 
@@ -79,11 +82,11 @@ public class WhiteRum extends CocktailDecorator {
         return cocktail.getDescription() + ", White rum";
     }
 }
-{% endhighlight %}
+</pre>
 
 <p>All the rest of the decorators are the same, with their own cost and description.</p>
 
-{% highlight java %}
+<pre>
 
 public class TripleSec extends CocktailDecorator {
 
@@ -159,29 +162,29 @@ public class Cola extends CocktailDecorator {
         return cocktail.getDescription() + ", Cola";
     }
 }
-{% endhighlight %}
+</pre>
 
 <p>Here is how we would build a cocktail using the decorators. Let's start by creating the basic cocktail.</p>
 
-{% highlight java %}
+<pre>
 
         Cocktail cocktail = new BasicCocktail();
         System.out.println(cocktail.getDescription());
         // Prints: Vodka
-{% endhighlight %}
+</pre>
 
 <p>To add white rum to the mix.</p>
 
-{% highlight java %}
+<pre>
 
         cocktail = new WhiteRum(cocktail);
         System.out.println(cocktail.getDescription());
         // Prints: Vodka, White rum
-{% endhighlight %}
+</pre>
 
 <p>Let's add the rest as well!</p>
 
-{% highlight java %}
+<pre>
 
         cocktail = new TripleSec(cocktail);
         System.out.println(cocktail.getDescription());
@@ -206,11 +209,11 @@ public class Cola extends CocktailDecorator {
         System.out.println("Cost: " + cocktail.getCost());
         // Prints: Cost: 18
         
-{% endhighlight %}
+</pre>
 
 <p>But wait! Now our customers are complaining that the drink is <b>too warm and needs to be colder</b>. Luckily, we are well prepared for such demands. Here is a new decorator to make our drink a bit cooler.</p>
 
-{% highlight java %}
+<pre>
 
 public class Ice extends CocktailDecorator {
 
@@ -226,16 +229,16 @@ public class Ice extends CocktailDecorator {
         return cocktail.getDescription() + ", Ice";
     }
 }
-{% endhighlight %}
+</pre>
 
 <p>We can add this decorator the same way as all the others</p>
 
-{% highlight java %}
+<pre>
 
         cocktail = new Ice(cocktail);
         System.out.println(cocktail.getDescription());
         // Prints: Vodka, White rum, Triple sec, Tequila, Lemon juice, Gin, Cola, Ice
-{% endhighlight %}
+</pre>
 
 <p>Here is our finished drink!</p>
 

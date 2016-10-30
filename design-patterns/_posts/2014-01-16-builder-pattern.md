@@ -1,23 +1,22 @@
 ---
 layout: post
 title: Builder Pattern
+tags: [creational]
 ---
 
 <h1>Builder Pattern</h1>
 
-<p>I use builder pattern quite a lot. Have a search query you want to build? Object that has plenty of fields with some of them mandatory? Builder pattern is here to save you!</p>
-  
-<p>The idea of the builder pattern is to gradually construct an object without using the object's constructor directly, but with a separate builder object. By using the builder object we can avoid having numerous constructors for an object. We also can make sure that the created object is in a consistent state. Let's see how this works by an example.</p>
+<p><a href="https://en.wikipedia.org/wiki/Builder_pattern">Wikipedia</a> describes builder pattern as following</p>
+
+<p><i>The intent of the Builder design pattern is to separate the construction of a complex object from its representation. By doing so the same construction process can create different representations.</i></p>
 
 <h2>Use Case</h2>
 
 <p>I need an employee object that contains basic information about the employee. The employee has fields both <b>mandatory</b> and <b>optional</b>. How do I make sure that my employee class is <b>always</b> in a consistent state with all necessary fields populated?</p>
 
-<p>The following code contains a sample of the "Employee" class. The object has private fields with setters and getters provided.</p>
+<p>The following code contains a sample of the <i>Employee</i> class. The object has private fields with setters and getters provided.</p>
 
-<h3>Employee.java</h3>
-
-{% highlight java %}
+<pre>
 public class Employee {
 
     private String firstName;           // Required
@@ -27,21 +26,21 @@ public class Employee {
     
     // getters and setters
     
-{% endhighlight %}
+</pre>
 
 <p>If we were to handle the employee object, we would first need to check that it is in a consistent state. So we would always do the following checks when handling an employee object</p>
 
-{% highlight java %}
+<pre>
 if(employee.getFirstName() != null) {
   ...
 }
-{% endhighlight %}
+</pre>
 
 <h2>Solution</h2>
   
-<p>There is an easier way! Check out the new improved Employee.java</p>
+<p>There is an easier way! Check out the new improved <i>Employee</i></p>
 
-{% highlight java %}
+<pre>
 
 public class Employee {
 
@@ -120,11 +119,11 @@ public class Employee {
     }
 }
 
-{% endhighlight %}
+</pre>
 
-<p>What have we done? Well, we've used a builder object "EmployeeBuilder" that will construct an immutable "Employee" object with all mandatory fields guaranteed to be populated. The cool thing about this pattern is also the way you construct new objects.</p>
+<p>What have we done? Well, we've used a builder object <i>EmployeeBuilder</i> that will construct an immutable <i>Employee</i> object with all mandatory fields guaranteed to be populated. The cool thing about this pattern is also the way you construct new objects.</p>
 
-{% highlight java %}
+<pre>
 
 Employee employee = new Employee.EmployeeBuilder()
         .firstName("Sebastian")
@@ -133,6 +132,19 @@ Employee employee = new Employee.EmployeeBuilder()
         .salaryPerMonth(new BigDecimal(0))
         .build();
         
-{% endhighlight %}
+</pre>
 
-<p>If you miss a mandatory field, the object will not be created and you'll be greeted with an "IllegalStateException" :)</p>
+<p>If you miss a mandatory field, the object will not be created and you'll be greeted with an <i>IllegalStateException</i> :)</p>
+
+<h2>Real World Example</h2>
+
+<p>Apache's <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/builder/ToStringBuilder.html">ToStringBuilder</a> is an example of a builder pattern. It helps to implement a <i>toString()</i> method without complex String concatenation. An example usage:</p>
+
+<pre>
+public String toString() {
+    return new ToStringBuilder(this).
+      append("name", name).
+      append("age", age).
+      build();
+}
+</pre>

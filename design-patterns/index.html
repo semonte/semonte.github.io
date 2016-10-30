@@ -2,12 +2,33 @@
 layout: default
 ---
 
+<div class="top-nav">
+  <ul>
+    <a href="/">Home</a>
+  </ul>
+</div>
+      
 <div class="posts-listing">
-	<h2>Design Patterns</h2>
+	<h1>Design Patterns</h1>
 	<ul>
-		{% for post in site.categories.design-patterns %}
-			<li><a href="{{ post.url }}">{{ post.title }}</a></li>
-		{% endfor %}
+    <li>Creational
+      <ul>
+    		{% for post in site.categories.design-patterns %}
+          {% if post.tags contains 'creational' %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+          {% endif %}
+    		{% endfor %}      
+      </ul>
+    </li>
+    <li>Structural
+      <ul>
+    		{% for post in site.categories.design-patterns %}
+          {% if post.tags contains 'structural' %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+          {% endif %}
+    		{% endfor %}      
+      </ul>
+    </li>  
 	</ul>	
 </div>
 

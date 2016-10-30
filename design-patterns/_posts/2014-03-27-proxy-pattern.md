@@ -1,11 +1,12 @@
 ---
 layout: post
 title: Proxy Pattern
+tags: [structural]
 ---
 
 <h1>Proxy Pattern</h1>
 
-<p>Wikipedia describes proxy pattern as following</p>
+<p><a href="https://en.wikipedia.org/wiki/Proxy_pattern">Wikipedia</a> describes proxy pattern as following</p>
 
 <p><i>A proxy, in its most general form, is a class functioning as an interface to something else. The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource that is expensive or impossible to duplicate.</i></p>
   
@@ -15,19 +16,19 @@ title: Proxy Pattern
 
 <h2>Solution</h2>
 
-<p>We'll solve this problem by using the proxy pattern and Java reflection API. The idea is to create an interface, which reads a file's content. If the file is protected, it throws an AccessDeniedException exception, othewise the content is returned.</p>
+<p>We'll solve this problem by using the proxy pattern and Java reflection API. The idea is to create an interface, which reads a file's content. If the file is protected, it throws an <i>AccessDeniedException</i> exception, othewise the content is returned.</p>
 
 <p>Let's start by writing the interface.</p>
 
-{% highlight java %}
+<pre>
 public interface IFile {
     public String getContent(String path);
 }
-{% endhighlight %}
+</pre>
 
 <p>And here we have the implementation of that interface.</p>
 
-{% highlight java %}
+<pre>
 public class FileImpl implements IFile {
 
 public String getContent(String path) {
@@ -35,20 +36,19 @@ public String getContent(String path) {
   return "Placeholder text...";
   }
 }
+</pre>
 
-{% endhighlight %}
+<p>In order to use a proxy instead of using <i>FileImpl</i>, we need a way to create that proxy. Luckily, Java has a pretty awesome class in <i>java.lang.reflect</i> package called <i>Proxy</i>. By using <i>Proxy</i> class, we can actually create proxies from interfaces!</p>
 
-<p>In order to use a proxy instead of using FileImpl, we need a way to create that proxy. Luckily, Java has a pretty awesome class in java.lang.reflect package called Proxy. By using Proxy class, we can actually create proxies from interfaces!</p>
-
-{% highlight java %}
+<pre>
 IFile o = (IFile) Proxy.newProxyInstance(IFile.class.getClassLoader(),
                                          new Class<?>[]{IFile.class},
                                          new FileInvocationHandler(new FileImpl()));
-{% endhighlight %}
+</pre>
 
-<p>You are probably now wondering what is that FileInvocationHandler. Here is the source for that and an explantion after.</p>
+<p>You are probably now wondering what is that <i>FileInvocationHandler</i>. Here is the source for that and an explantion after.</p>
 
-{% highlight java %}
+<pre>
 
 public class FileInvocationHandler implements InvocationHandler {
 
@@ -68,13 +68,13 @@ public class FileInvocationHandler implements InvocationHandler {
         return method.invoke(this.file, args);
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>When we create a proxy class with the Proxy.newProxyInstance() method, we must also pass an invocation handler as the third parameter. When a proxy class method is called, the call actually invokes the invocation handler's invoke method, no matter what proxy method is being called. This allows us to protect files, so that the contents of files in the "/private" folder are never accessable.</p>
+<p>When we create a proxy class with the <i>Proxy.newProxyInstance()</i> method, we must also pass an invocation handler as the third parameter. When a proxy class method is called, the call actually invokes the invocation handler's invoke method, no matter what proxy method is being called. This allows us to protect files, so that the contents of files in the "/private" folder are never accessable.</p>
 
 <p>Here are simple test cases to verify the functionality.</p>
 
-{% highlight java %}
+<pre>
 
     @Test
     public void thatPublicFolderIsAccessible() throws IllegalAccessException {
@@ -92,6 +92,6 @@ public class FileInvocationHandler implements InvocationHandler {
                                                  new FileInvocationHandler(new FileImpl()));
         o.getContent("/private/file.txt");
     }
-{% endhighlight %}
+</pre>
 
-<p><i>This code is here just to give you an idea of proxy pattern. There should probably be additional checks to fully secure file paths.</i></p>
+<p class="warning">This code is here just to give you an idea of proxy pattern. There should probably be additional checks to fully secure file paths.</p>

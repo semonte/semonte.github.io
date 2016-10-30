@@ -1,21 +1,24 @@
 ---
 layout: post
 title: Abstract Factory Pattern
+tags: [creational]
 ---
 
 <h1>Abstract Factory Pattern</h1>
 
-<p>Abstract factory is a tough one! At least when you try to understand the definition of it and a suitable use case. Let's jump straight to the code to see what is going on!</p>
+<p><a href="http://en.wikipedia.org/wiki/Abstract_factory_pattern">Wikipedia</a> describes abstract factory pattern as following</p>
+
+<p><i>The abstract factory pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes.</i></p>
   
 <h2>Use Case</h2>
 
 <p>I have a user service that needs to get users either from database or cache. The service method is the following.</p>
 
-{% highlight java %}
+<pre>
 public User getUserByName(RepositoryType repositoryType, String name)
-{% endhighlight %}
+</pre>
 
-{% highlight java %}
+<pre>
 public class User {
 
     public String name;
@@ -24,15 +27,15 @@ public class User {
         this.name = name;
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>The RepositoryType is an enum, which specifies what repository should be used (database or cache).</p>
+<p>The <i>RepositoryType</i> is an enum, which specifies what repository should be used (database or cache).</p>
   
-{% highlight java %}
+<pre>
 public enum RepositoryType {
     DATABASE, CACHE
 }
-{% endhighlight %}
+</pre>
 
 <p>How can I isolate the logic of selecting the correct repository, so that the user service does not need to bother itself with such low level details. What can we do?</p>
 
@@ -40,35 +43,35 @@ public enum RepositoryType {
 
 <p>We'll start by creating an interface for finding the user by name. We do not worry about selecting the correct repository yet.</p>
 
-{% highlight java %}
+<pre>
 public interface IUserRepository {
     public User getUserByName(String name);
 }
-{% endhighlight %}
+</pre>
 
 <p>Next we provide two implementations for this interface (database and cached implementations).</p>
 
-{% highlight java %}
+<pre>
 public class DatabaseUserRepository implements IUserRepository {
 
     public User getUserByName(String name) {
         return new User("I am a user from database!");
     }
 }
-{% endhighlight %}
+</pre>
 
-{% highlight java %}
+<pre>
 public class CacheUserRepository implements IUserRepository {
 
     public User getUserByName(String name) {
         return new User("I am a user from cache!");
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>We are almost done. Now we just need to select the correct repository based on the RepositoryType parameter of the user service call. Easy, let's just do the following.</p>
+<p>We are almost done. Now we just need to select the correct repository based on the <i>RepositoryType</i> parameter of the user service call. Easy, let's just do the following.</p>
 
-{% highlight java %}
+<pre>
 public class UserService {
 
     private IUserRepositoryFactory userRepositoryFactory;
@@ -81,17 +84,17 @@ public class UserService {
         return this.userRepositoryFactory.create(repositoryType).getUserByName(name);
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>Where did that IUserRepositoryFactory come from and what does it do? Hmm...</p>
+<p>Where did that <i>IUserRepositoryFactory</i> come from and what does it do? Hmm...</p>
 
-{% highlight java %}
+<pre>
 public interface IUserRepositoryFactory {
     public IUserRepository create(RepositoryType repositoryType);
 }
-{% endhighlight %}
+</pre>
 
-{% highlight java %}
+<pre>
 public class UserRepositoryFactory implements IUserRepositoryFactory {
 
     private IUserRepository databaseUserRepository;
@@ -114,12 +117,12 @@ public class UserRepositoryFactory implements IUserRepositoryFactory {
         throw new IllegalArgumentException("RepositoryType not supported!");
     }
 }
-{% endhighlight %}
+</pre>
 
-<p>As you can see, IUserRepositoryFactory is an interface which is implemented by UserRepositoryFactory. The UserRepositoryFactory is responsible for the logic of selecting the correct repository. The user service is completely unaware of this logic and we could easily add more repositories just be modifying the UserRepositoryFactory class!</p>
+<p>As you can see, <i>IUserRepositoryFactory</i> is an interface which is implemented by <i>UserRepositoryFactory</i>. The <i>UserRepositoryFactory</i> is responsible for the logic of selecting the correct repository. The user service is completely unaware of this logic and we could easily add more repositories just be modifying the <i>UserRepositoryFactory</i> class!</p>
 
 <p>Here is an example of how the service is used. <b>Note: the first four lines would actually be handled by a dependency injection framework.</b></p>
-{% highlight java %}
+<pre>
 IUserRepository databaseUserRepository = new DatabaseUserRepository();
 IUserRepository cacheUserRepository = new CacheUserRepository();
 IUserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(databaseUserRepository, cacheUserRepository);
@@ -130,6 +133,12 @@ User userFromCache = userService.getUserByName(RepositoryType.CACHE, "");
 
 assertEquals("I am a user from database!", userFromDatabase.name);
 assertEquals("I am a user from cache!", userFromCache.name);
-{% endhighlight %}
+</pre>
 
 <p>I hope that <a href="http://en.wikipedia.org/wiki/Abstract_factory_pattern">Wikipedia's</a> first line about abstract factories makes even a bit more sense to you than before :)</p>
+
+<h2>Real World Example</h2>
+
+<p>Java's <i><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html">javax.xml.parsers.DocumentBuilderFactory</a></i> is an example of an abstract factory pattern. The <i><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html#newInstance--">newInstance()</a></i> method returns a <i>DocumentBuilderFactory</i> implementation based on the runtime parameters that vary with different applications. The <i>DocumentBuilderFacory</i> can be compared to our <i>UserRepositoryFactory</i> class: it also returns an implementation based on a given parameter.</p>
+
+<p>Once a <i>DocumentBuilderFactory</i> is initialized with the <i>newInstance()</i> method, the <a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html#newDocumentBuilder--"><i>newDocumentBuilder()</i></a> method can be invoked. This method returns an implementation of a <a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilder.html"><i>DocumentBuilder</i></a>. It can be, for example, <a href="https://xerces.apache.org/xerces-j/apiDocs/org/apache/xerces/jaxp/DocumentBuilderImpl.html"><i>org.apache.xerces.jaxp.DocumentBuilderImpl</i></a> or <a href="http://www.saxonica.com/html/documentation/javadoc/net/sf/saxon/dom/DocumentBuilderImpl.html"><i>net.sf.saxon.dom.DocumentBuilderImpl</i></a> classes. These implementations are comparable to our <i>DatabaseUserRepository</i> and <i>CacheUserRepository</i> classes.</p>
